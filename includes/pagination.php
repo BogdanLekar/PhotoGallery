@@ -1,8 +1,5 @@
 <?php
 
-// This is a helper class to make pagination
-// records easy.
-
 class Pagination {
 
     public $current_page; // 1. Номер страницы на котором находимся

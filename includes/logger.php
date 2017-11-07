@@ -1,8 +1,6 @@
 <?php
 require_once(LIB_PATH.DS."user.php");
 
-// Logger - класс log файлов php
-
 class Logger {
     
     public $action;
@@ -28,7 +26,6 @@ class Logger {
     
     public function delite_log_file($user_name) {
         file_put_contents($this->log_path, '');
-        // Add the first log entry
         $this->log_action('Логи удалены', "По Логину {$user_name}");
         redirect_to('logfile.php');
     }

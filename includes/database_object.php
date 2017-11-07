@@ -1,6 +1,5 @@
 <?php
-// If it's going to need the database, then it's
-// probably smart ot require it before we start.s
+
 require_once(LIB_PATH.DS.'database.php');
 
 class DatabaseObject {
@@ -81,8 +80,6 @@ class DatabaseObject {
     
     protected function attributes() {
         //return get_object_vars($this); // проблема в том что это возвращает ассоциативный массив со всеми атрибутами класса. а также включает приватные и защищённые атрибуты. Для работы с БД не подходит.
-        // return an array of attribute keys and their values
-        	// return an array of attribute names and their values
 	  $attributes = array();
 	  foreach(static::$db_fields as $field) {
 	    if(property_exists($this, $field)) {
@@ -96,8 +93,7 @@ class DatabaseObject {
     protected function sanitized_attributes() {
         global $database;
         $clean_attributes = array();
-        // sanitize the values before submitting
-        // Note: does not alter the actual value of each attribute
+        // sanitize attribute
         foreach($this->attributes() as $key => $value){
             if($value !== null) {
                 $clean_attributes[$key] = $database->escape_value($value);

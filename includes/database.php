@@ -58,18 +58,18 @@ class MySQLDatabase {
         return mysqli_fetch_array($result_set);
     }
     
+    // возвращает кол-во строк
     public function num_rows($result_set) {
-        // возвращает кол-во строк
         return mysqli_num_rows($result_set);
     }
     
+    // получает id который был последний вставленный в текущем подключении к базе данных
     public function insert_id() {
-        // получает id который был последний вставленный в текущем подключении к базе данных
         return mysqli_insert_id($this->connection);
     }
     
+    // возвращает значение, на сколько строк мы повлияли последним действием
     public function affected_rows() {
-        // возвращает значение, на сколько строк мы повлияли последним действием
         return mysqli_affected_rows($this->connection);
     }
     

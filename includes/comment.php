@@ -1,7 +1,5 @@
 <?php
 
-// If it's going to need the database, then it's
-// probably smart to require it before we start.
 require_once(LIB_PATH.DS.'database.php');
 
 class Comment extends DatabaseObject {
@@ -14,7 +12,6 @@ class Comment extends DatabaseObject {
     public $body;
     
     // Создание фабричного метода
-    // "new" is a reserved word so we use "make" (or "build")
     public static function make($photo_id, $author="Anonymous", $body="") {
         if(!empty($photo_id) && !empty($author) && !empty($body)) {
             $comment = new Comment();

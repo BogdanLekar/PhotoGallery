@@ -1,6 +1,5 @@
 <?php
-// If it's going to need the database, then it's
-// probably smart ot require it before we start.s
+
 require_once(LIB_PATH.DS.'database.php');
 
 class Photograph extends DatabaseObject {
@@ -38,19 +37,15 @@ class Photograph extends DatabaseObject {
         return self::find_by_sql($sql);
     }
     
-    // Pass in $_FILE(['uploaded_file']) as an argument
+    // Вытащить из массива $_FILE(['uploaded_file']) в аргументы(свойства)
     public function attach_file($file) {
-        // Perform error checking on the form parameters
         if(!$file || empty($file) || !is_array($file)) {
-            // error: nothin uploaded or wrong argument usage
             $this->errors[] = "Файл не был загружён.";
             return false;
         } elseif($file['error'] != 0) {
-            // error: report what PHP says went wrong
             $this->errors[] = $this->upload_errors[$file['error']];
             return false;
         } else {
-            // Set object attributes to the form parameters/
             $this->temp_path    = $file['tmp_name'];
             $name_codding = new Codding();
             $name_codding->file_name = $file['name'];
@@ -58,28 +53,22 @@ class Photograph extends DatabaseObject {
             $this->filename     = basename($name);
             $this->type         = $file['type'];
             $this->size         = $file['size'];
-            // Don't worry about saving anything to the database yet.
             return true;
         }
         
     }
     
     public function save() {
-        // A new record won't have an id yet.
         if(isset($this->id)) {
-            // Really just to updatet the caption
             $this->update();
         } else {
-            // Can't save if there are pre-existing errors
             if(!empty($this->errors)) { return false; }
-
-            // Make sure the caption is not too long for the DB
+            
             if(strlen($this->caption) > 255) {
                 $this->errors[] = "Описание не должно превышать 255 символов.";
                 return false;
             }
 
-            // Can't save without filename and temp location
             if(empty($this->filename) || empty($this->temp_path)) {
                 $this->errors[] = "Местоположение файла недоступно.";
                 return false;
@@ -90,20 +79,17 @@ class Photograph extends DatabaseObject {
                 return false;
             }
            
-            
-            // Determine the target_path
             $target_path = SITE_ROOT.DS.'public'.DS.$this->upload_dir.DS.$this->filename;
             
-            // Make sure a file doesn't already exist in the target location
             if(file_exists($target_path)) {
                 $this->errors[] = "Файл с именем {$this->filename} уже есть.";
                 return false;
             }
-
-            // Attempt to move the file
+            
+            // Пытаемся отправить изображение из временной в нашу директорию
             if(move_uploaded_file($this->temp_path, $target_path)) {
-                // Success
-                // Save a corresponding entry to the database
+                // Если успешно
+                // Сохраняем значение в базу данных
                 if($this->create()) {
                     unset($this->temp_path);// Удаляем временный путь, потому что файла там больше нет.
                     return true;
@@ -117,14 +103,13 @@ class Photograph extends DatabaseObject {
     }
     
     public function destroy() {
-        // First remove the database entry
+        // В перувую очередь удаляем значение из базы данных
         if($this->delete()) {
             $target_path = SITE_ROOT.DS.'public'.DS.$this->image_path(); 
             return unlink($target_path) ? true : false;
         } else {
             return false;
         }
-        // then remove the file
     }
     
     public function image_path() {

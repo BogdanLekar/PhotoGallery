@@ -1,9 +1,5 @@
 <?php
-// A class to help work with Sessions
-// In our case, primarily to manage logging users in and out
 
-// Keep in mind when working with sessions that it is generally
-// inadvisable to store DB-related objects in sessions
 class Session {
     
     private $logged_in=false;
@@ -15,11 +11,6 @@ class Session {
         session_start();
         $this->check_message();
         $this->check_login();
-        if($this->logged_in) {
-            // actions to take right away if user is logged in
-        } else {
-            // actions to take right away if user is not logged in
-        }
     }
     
     public function is_logged_in() {
@@ -27,7 +18,7 @@ class Session {
     }
     
     public function login($user) {
-        // database should find user based on username/password
+        // Если в БД найден пользователь и он прошёл проверку выполняем вход
         if($user) {
             $this->user_id = $_SESSION['user_id'] = $user->id;
             $this->user_name = $_SESSION['user_name'] = $user->username;
@@ -67,9 +58,9 @@ class Session {
     }
     
     private function check_message() {
-        // Is there a message stored in the session?
+        // Сообщене заданно в SESSION['message]
         if(isset($_SESSION['message'])) {
-            // Add it as an attribute and erase the stored version
+            // Добавить атрибут message и очистить сессию 
             $this->message = $_SESSION['message'];
             unset($_SESSION['message']);
         } else {
